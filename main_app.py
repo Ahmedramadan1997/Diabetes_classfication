@@ -16,7 +16,7 @@ class LogTransformer(BaseEstimator, TransformerMixin):
         assert self.n_features_in == X.shape[1]
         return np.log(X)
     
-
+setattr(__name__, 'LogTransformer', LogTransformer)
 app = Flask(__name__)
 
 model = joblib.load("oversampling_pipeline.pkl")
