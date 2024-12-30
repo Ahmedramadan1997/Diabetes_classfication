@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diabetes Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212; /* تغيير الخلفية إلى اللون الداكن */
+            color: white; /* تغيير لون النص إلى الأبيض */
+            margin: 0;
+            padding: 0;
+        }
+        section {
+            padding: 50px 20px;
+        }
+        nav {
+            background-color: #333; /* تغيير خلفية الشريط العلوي */
+            padding: 10px 0;
+            text-align: center;
+        }
+        nav a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+            font-size: 18px;
+        }
+        nav a:hover {
+            color: #4CAF50; /* تغيير لون الرابط عند التمرير */
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #1e1e1e; /* تغيير الخلفية داخل الصندوق */
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        .container input, .container select, .container button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #333; /* إضافة حدود للصناديق */
+            background-color: #333; /* تغيير خلفية المدخلات */
+            color: white; /* تغيير النص إلى الأبيض */
+        }
+        .container button {
+            background-color: #4CAF50; /* زر باللون الأخضر */
+            color: white;
+            font-size: 18px;
+        }
+        .container button:hover {
+            background-color: #45a049; /* تغيير لون الزر عند التمرير */
+        }
+
+        /* Gallery for EDA */
+        .image-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .image-gallery div {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            text-align: center;
+        }
+
+        .image-gallery img {
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Smoking images */
+        .smoking-images {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            text-align: center;
+        }
+
+        .smoking-images img {
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Background for prediction section */
+        .prediction {
+            background-image: url('{{ url_for("static", filename="images/diabetes_background.jpg") }}'); /* إضافة الخلفية هنا */
+            background-size: cover;
+            background-position: center;
+            color: white;
+        }
+
+        .prediction .container {
+            background-color: rgba(0, 0, 0, 0.7); /* خلفية داكنة مع شفافية */
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 600px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Divider between pages */
+        .page-divider {
+            height: 50px;
+            background-color: #4CAF50; /* تغيير اللون */
+            margin: 30px 0;
+            text-align: center;
+            color: white;
+            font-size: 20px;
+            line-height: 50px;
+        }
+
+        /* Link styling */
+        a {
+            color: #4CAF50;
+        }
+        a:hover {
+            color: #81C784;
+        }
+
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="#welcome">Home</a>
+        <a href="#eda">EDA</a>
+        <a href="#prediction">Prediction</a>
+    </nav>
+
+    <section id="welcome">
+        <h1>Welcome to the Diabetes Prediction System!</h1>
+    </section>
+
+    <section id="eda">
+        <h1>Exploratory Data Analysis (EDA)</h1>
+        <p>Here are some charts to understand the data better:</p>
+
+        <div class="image-gallery">
+            <div>
+                <h2>Gender vs Diabetes</h2>
+                <img src="{{ url_for('static', filename='images/gender_diabetes.png') }}" alt="Gender vs Diabetes">
+                <img src="{{ url_for('static', filename='images/gender_diabetess.png') }}" alt="Gender vs Diabetes 2">
+            </div>
+
+            <div>
+                <h2>Age vs Diabetes</h2>
+                <img src="{{ url_for('static', filename='images/age_dibetes.png') }}" alt="Age vs Diabetes">
+                <img src="{{ url_for('static', filename='images/age_dibetess.png') }}" alt="Age vs Diabetes 2">
+            </div>
+
+            <div>
+                <h2>Smoking History vs Diabetes</h2>
+                <div class="smoking-images">
+                    <img src="{{ url_for('static', filename='images/smoking_diabetes.png') }}" alt="Smoking History vs Diabetes">
+                    <img src="{{ url_for('static', filename='images/smoking_diabetess.png') }}" alt="Smoking History vs Diabetes 2">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="prediction" class="prediction">
+        <div class="container">
+            <h1>Enter Patient Information</h1>
+            <form method="POST" action="/predict">
+                <label for="gender">Gender:</label>
+                <select name="gender" id="gender" required>
+                    <option value="Female">Female</option>
+                    <option value="Male">Male</option>
+                </select>
+
+                <label for="age">Age:</label>
+                <input type="number" name="age" id="age" required>
+
+                <label for="location">Location:</label>
+                <select name="location" id="location" required>
+                    <option value="Alabama">Alabama</option>
+                    <option value="Hawaii">Hawaii</option>
+                    <option value="Montana">Montana</option>
+                </select>
+
+                <label for="hypertension">Hypertension (1 for Yes, 0 for No):</label>
+                <input type="number" name="hypertension" id="hypertension" required>
+
+                <label for="heart_disease">Heart Disease (1 for Yes, 0 for No):</label>
+                <input type="number" name="heart_disease" id="heart_disease" required>
+
+                <label for="smoking_history">Smoking History:</label>
+                <select name="smoking_history" id="smoking_history" required>
+                    <option value="No smoking">No smoking</option>
+                    <option value="past smoking">Past smoking</option>
+                    <option value="Smoking">Smoking</option>
+                </select>
+
+                <label for="bmi">BMI:</label>
+                <input type="number" step="0.1" name="bmi" id="bmi" required>
+
+                <label for="hbA1c_level">HbA1c Level:</label>
+                <input type="number" step="0.1" name="hbA1c_level" id="hbA1c_level" required>
+
+                <label for="blood_glucose_level">Blood Glucose Level:</label>
+                <input type="number" name="blood_glucose_level" id="blood_glucose_level" required>
+
+                <button type="submit">Start Prediction</button>
+            </form>
+
+            {% if prediction_text %}
+                <h2>{{ prediction_text }}</h2>
+            {% endif %}
+        </div>
+    </section>
+
+</body>
+</html>
