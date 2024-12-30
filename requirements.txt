@@ -2,7 +2,7 @@ flask
 psycopg2
 gunicorn
 imblearn
-sklearn
+scikit-learn
 joblib
 numpy
 pandas
