@@ -14,7 +14,7 @@ class LogTransformer(BaseEstimator, TransformerMixin):
     # transformer
     def transform(self, X, y=None):
         assert self.n_features_in == X.shape[1]
-        return np.log(X)
+        return np.log(X + 1e-9)
     
 setattr(__name__, 'LogTransformer', LogTransformer)
 app = Flask(__name__)
