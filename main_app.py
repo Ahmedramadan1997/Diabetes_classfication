@@ -19,7 +19,10 @@ class LogTransformer(BaseEstimator, TransformerMixin):
 app = Flask(__name__)
 
 # تحميل النموذج المدرب
-model = joblib.load("oversampling_pipeline.pkl")
+try:
+    model = joblib.load("oversampling_pipeline.pkl")
+except FileNotFoundError:
+    raise Exception("Model file not found. Please ensure 'oversampling_pipeline.pkl' is in the correct directory.")
 
 @app.route('/')
 def home():
@@ -28,6 +31,7 @@ def home():
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
+        # استلام البيانات من النموذج
         gender = request.form['gender']
         age = int(request.form['age'])
         location = request.form['location']
@@ -38,9 +42,11 @@ def predict():
         hbA1c_level = float(request.form['hbA1c_level'])
         blood_glucose_level = int(request.form['blood_glucose_level'])
         
+        # إنشاء DataFrame من المدخلات
         input_data = pd.DataFrame([[gender, age, location, hypertension, heart_disease, smoking_history, bmi, hbA1c_level, blood_glucose_level]], 
                                    columns=["gender", "age", "location", "hypertension", "heart_disease", "smoking_history", "bmi", "hbA1c_level", "blood_glucose_level"])
         
+        # إجراء التنبؤ
         prediction = model.predict(input_data)
         prediction_text = 'Patient has Diabetes' if prediction[0] == 1 else 'Patient does not have Diabetes'
         
